@@ -95,18 +95,24 @@ type ParamStruct struct {
 }
 
 type TaskCmd struct {
-	SubCmd map[string]*TaskCmd
-	Enable bool
-	Params map[string]*ParamStruct
+	CmdPath string
+	SubCmd  map[string]*TaskCmd
+	Enable  bool
+	Params  map[string]*ParamStruct
 }
 
 // +++++ End define
 
 func NewCommand(rootCmd *cobra.Command, item *CobraCMD, taskCmd *TaskCmd) {
+	_cmdPath := item.CMD
+	if taskCmd.CmdPath != "" {
+		_cmdPath = taskCmd.CmdPath + "." + _cmdPath
+	}
 	_taskCmd := &TaskCmd{
-		Enable: false,
-		SubCmd: make(map[string]*TaskCmd),
-		Params: make(map[string]*ParamStruct),
+		Enable:  false,
+		CmdPath: _cmdPath,
+		SubCmd:  make(map[string]*TaskCmd),
+		Params:  make(map[string]*ParamStruct),
 	}
 	taskCmd.SubCmd[item.CMD] = _taskCmd
 
@@ -116,6 +122,7 @@ func NewCommand(rootCmd *cobra.Command, item *CobraCMD, taskCmd *TaskCmd) {
 		Long:  item.Long,
 		Run: func(cmd *cobra.Command, args []string) {
 			_taskCmd.Enable = true
+			fmt.Println("============+ " + _cmdPath + " +============")
 		},
 	}
 
@@ -173,8 +180,21 @@ func PrintCommand(taskCmd *TaskCmd) {
 }
 
 // TODO 在这里执行操作
-func ExecCommand() {
-
+func ExecCommand(taskCmd *TaskCmd) (string, map[string]*ParamStruct) {
+	if len(taskCmd.SubCmd) != 0 {
+		fmt.Println(taskCmd.SubCmd)
+		for _taskName, _taskCmd := range taskCmd.SubCmd {
+			fmt.Println(_taskName)
+			fmt.Println(_taskCmd)
+			if _taskCmd.Enable {
+				_subcmd, params := ExecCommand(_taskCmd)
+				return _taskName + "_" + _subcmd, params
+			}
+		}
+		return "", taskCmd.Params
+	} else {
+		return "", taskCmd.Params
+	}
 }
 
 func main() {
@@ -214,9 +234,10 @@ func main() {
 		Long:  `Feishu Agent Build By QA Team. Any question please try '--help' or ask @李佳伦 for help.`,
 	}
 	res := &TaskCmd{
-		Enable: true,
-		SubCmd: make(map[string]*TaskCmd),
-		Params: make(map[string]*ParamStruct),
+		CmdPath: "",
+		Enable:  true,
+		SubCmd:  make(map[string]*TaskCmd),
+		Params:  make(map[string]*ParamStruct),
 	}
 	for _, cmd := range cmdList {
 		NewCommand(rootCmd, cmd, res)
@@ -234,8 +255,11 @@ func main() {
 	// fmt.Println("====================================")
 	rootCmd.SetArgs([]string{"jenkins", "build", "--job_name=AK47", "--param='A=k,a=K'"})
 	rootCmd.Execute()
-	// fmt.Println(res.SubCmd["jenkins"].SubCmd["build"])
-	// fmt.Println(*res.SubCmd["jenkins"].SubCmd["build"].Params["job_name"].Value.(*string))
-	// fmt.Println(*res.SubCmd["jenkins"].SubCmd["build"].Params["param"].Value.(*map[string]string))
-	PrintCommand(res)
+	fmt.Println(res.SubCmd["jenkins"].SubCmd["node"].Enable)
+	fmt.Println(res.SubCmd["jenkins"].SubCmd["build"].Enable)
+	fmt.Println(*res.SubCmd["jenkins"].SubCmd["build"].Params["job_name"].Value.(*string))
+	fmt.Println(*res.SubCmd["jenkins"].SubCmd["build"].Params["param"].Value.(*map[string]string))
+	// PrintCommand(res)
+	cmdLine, _ := ExecCommand(res)
+	fmt.Println(cmdLine)
 }
