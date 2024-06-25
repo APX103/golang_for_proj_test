@@ -21,33 +21,58 @@
                 }
             ],
             "short": "Build a job in Jenkins.",
-            "long": "Build a job in Jenkins by job name and it's parameters. and if not need parameters(not use default), should setup the sign '--no_param=true'"
+            "long": "Build a job in Jenkins by job name and it's parameters."
         },
         {
-            "cmd": "build",
+            "cmd": "status",
             "sub-cmd": [],
             "params": [
                 {
-                    "key": "no_param",
-                    "type": "bool",
-                    "Default": "string",
-                    "help": ""
-                },
-                {
-                    "key": "no_param",
-                    "type": "bool",
-                    "Default": "string",
-                    "help": ""
-                },
-                {
-                    "key": "no_param",
-                    "type": "bool",
+                    "key": "job_name",
+                    "type": "String",
                     "Default": "",
+                    "required": true,
+                    "help": ""
+                },
+                {
+                    "key": "build_id",
+                    "type": "String",
+                    "Default": "",
+                    "required": true,
                     "help": ""
                 }
             ],
-            "short": "Build a job in Jenkins.",
-            "long": "Build a job in Jenkins by job name and it's parameters. and if not need parameters(not use default), should setup the sign '--no_param=true'"
+            "short": "Check build status in Jenkins.",
+            "long": "Check build status in Jenkins with `job_name` and `build_id`."
+        },
+        {
+            "cmd": "queue",
+            "sub-cmd": [],
+            "params": [],
+            "short": "Show building queue in Jenkins.",
+            "long": "Show building queue in Jenkins."
+        },
+        {
+            "cmd": "node",
+            "sub-cmd": [
+                {
+                    "cmd": "list",
+                    "sub-cmd": [],
+                    "params": [],
+                    "short": "List nodes in Jenkins.",
+                    "long": "List nodes in Jenkins."
+                },
+                {
+                    "cmd": "online",
+                    "sub-cmd": [],
+                    "params": [],
+                    "short": "Check online load in Jenkins.",
+                    "long": "Check online load in Jenkins."
+                }
+            ],
+            "params": [],
+            "short": "Show nodes in Jenkins and check if they're online.",
+            "long": "Show nodes in Jenkins and check if they're online."
         }
     ],
     "params": [],
