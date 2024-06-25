@@ -1,0 +1,60 @@
+{
+    "cmd": "jenkins",
+    "sub-cmd": [
+        {
+            "cmd": "build",
+            "sub-cmd": [],
+            "params": [
+                {
+                    "key": "no_param",
+                    "type": "bool",
+                    "Default": "string" ,
+                    "help": ""
+                },
+                {
+                    "key": "no_param",
+                    "type": "bool",
+                    "Default": "string",
+                    "help": ""
+                },
+                {
+                    "key": "no_param",
+                    "type": "bool",
+                    "Default": "",
+                    "help": ""
+                }
+            ],
+            "short": "Build a job in Jenkins.",
+            "long": "Build a job in Jenkins by job name and it's parameters. and if not need parameters(not use default), should setup the sign '--no_param=true'"
+        },
+        {
+            "cmd": "build",
+            "sub-cmd": [],
+            "params": [
+                {
+                    "key": "no_param",
+                    "type": "bool",
+                    "Default": "string",
+                    "help": ""
+                },
+                {
+                    "key": "no_param",
+                    "type": "bool",
+                    "Default": "string",
+                    "help": ""
+                },
+                {
+                    "key": "no_param",
+                    "type": "bool",
+                    "Default": "",
+                    "help": ""
+                }
+            ],
+            "short": "Build a job in Jenkins.",
+            "long": "Build a job in Jenkins by job name and it's parameters. and if not need parameters(not use default), should setup the sign '--no_param=true'"
+        }
+    ],
+    "params": [],
+    "short": "Run jenkins task by this robot.",
+    "long": "Feishu robot: Jenkins agent is an agent to get access to the Jenkins service maintained by QA team. It can build jobs, check task queue, get jobs' status and so on."
+}
