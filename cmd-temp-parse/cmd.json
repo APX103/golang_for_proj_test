@@ -6,22 +6,18 @@
             "sub-cmd": [],
             "params": [
                 {
-                    "key": "no_param",
-                    "type": "bool",
-                    "Default": "string" ,
-                    "help": ""
-                },
-                {
-                    "key": "no_param",
-                    "type": "bool",
-                    "Default": "string",
-                    "help": ""
-                },
-                {
-                    "key": "no_param",
-                    "type": "bool",
+                    "key": "param",
+                    "type": "StringToString",
                     "Default": "",
-                    "help": ""
+                    "required": false,
+                    "help": "Jenkins Job param like 'a=z,s=l'"
+                },
+                {
+                    "key": "job_name",
+                    "type": "String",
+                    "Default": "",
+                    "required": true,
+                    "help": "Jenkins Job name"
                 }
             ],
             "short": "Build a job in Jenkins.",

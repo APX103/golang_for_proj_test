@@ -21,21 +21,21 @@ func main() {
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	}
-	rootCmd.PersistentFlags().StringVar(&bar_2, "bar", "fuck", "Bar Test")
-	rootCmd.PersistentFlags().IntVar(&e_2, "e", 1001, "E Test")
+	rootCmd.PersistentFlags().StringVar(&bar_2, "bar", "fuck", "总命令行的参数1")
+	rootCmd.PersistentFlags().IntVar(&e_2, "e", 1001, "总命令行的参数2")
 	var runCmd = &cobra.Command{
-		Use:   "run",
-		Short: "Run this code",
-		Long:  `All software has versions. This is Hugo's`,
+		Use:   "Jenkins",
+		Short: "Jenkins Task Agent, can build jobs and check status of job.",
+		Long:  `Jenkins Task Agent, can build jobs and check status of job.`,
 		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
-	runCmd.PersistentFlags().StringVar(&bar_3, "bar", "fuck", "Bar Test")
-	runCmd.PersistentFlags().IntVar(&e_3, "e", 1001, "E Test")
-	runCmd.PersistentFlags().StringToStringVar(&params, "params", nil, "Parameters Test")
+	runCmd.PersistentFlags().StringVar(&bar_3, "bar", "fuck", "jenkins 测试参数1")
+	runCmd.PersistentFlags().IntVar(&e_3, "e", 1001, "Jenkins测试参数2")
+	runCmd.PersistentFlags().StringToStringVar(&params, "params", nil, "jenkins键值对 Parameters Test")
 	rootCmd.AddCommand(runCmd)
 
-	argv, err := shellwords.Parse("@Mr.meeseeks run --bar=baz --e=1 --params='a=v,b=qahdiuowqhduowqjdioqw'")
+	argv, err := shellwords.Parse("@Mr.meeseeks Jenkins --bar=baz --e=1 --params='a=v,b=qahdiuowqhduowqjdioqw'")
 	if err != nil {
 		fmt.Println("牛逼")
 	}
@@ -57,6 +57,13 @@ to quickly create a Cobra application.`,
 	fmt.Println(params)
 
 	rootCmd.SetArgs([]string{"--help"})
+	err = rootCmd.Execute()
+	if err != nil {
+		fmt.Println("牛逼")
+		fmt.Print(err)
+	}
+
+	rootCmd.SetArgs([]string{"Jenkins", "--help"})
 	err = rootCmd.Execute()
 	if err != nil {
 		fmt.Println("牛逼")
