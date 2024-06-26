@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -87,7 +91,11 @@ func (c *MongoClientImpl) Find(collection string, key string, value interface{})
 type ParamEnum string
 
 const String ParamEnum = "String"
+const Int ParamEnum = "Int"
+const Bool ParamEnum = "Bool"
 const StringToString ParamEnum = "StringToString"
+const StringToInt ParamEnum = "StringToInt"
+const StringToBool ParamEnum = "StringToBool"
 
 type ParamStruct struct {
 	Type  ParamEnum
@@ -179,22 +187,59 @@ func PrintCommand(taskCmd *TaskCmd) {
 	fmt.Println("====================================")
 }
 
-// TODO 在这里执行操作
-func ExecCommand(taskCmd *TaskCmd) (string, map[string]*ParamStruct) {
-	if len(taskCmd.SubCmd) != 0 {
-		fmt.Println(taskCmd.SubCmd)
-		for _taskName, _taskCmd := range taskCmd.SubCmd {
-			fmt.Println(_taskName)
-			fmt.Println(_taskCmd)
-			if _taskCmd.Enable {
-				_subcmd, params := ExecCommand(_taskCmd)
-				return _taskName + "_" + _subcmd, params
-			}
-		}
-		return "", taskCmd.Params
-	} else {
-		return "", taskCmd.Params
+// // TODO 在这里执行操作
+// func ExecCommand(taskCmd *TaskCmd) (string, map[string]*ParamStruct) {
+// 	if len(taskCmd.SubCmd) != 0 {
+// 		fmt.Println(taskCmd.SubCmd)
+// 		for _taskName, _taskCmd := range taskCmd.SubCmd {
+// 			fmt.Println(_taskName)
+// 			fmt.Println(_taskCmd)
+// 			if _taskCmd.Enable {
+// 				_subcmd, params := ExecCommand(_taskCmd)
+// 				return _taskName + "_" + _subcmd, params
+// 			}
+// 		}
+// 		return "", taskCmd.Params
+// 	} else {
+// 		return "", taskCmd.Params
+// 	}
+// }
+
+func ExecCommand2(taskCmd string, param *TaskCmd) {
+	cmd_arr := strings.Split(taskCmd, ".")
+	p := param
+	for _, cmd := range cmd_arr {
+		p = p.SubCmd[cmd]
 	}
+	for paramKey, param := range p.Params {
+		fmt.Print(paramKey + ": ")
+		ParamPrintln(*param)
+	}
+
+}
+
+func ParamPrintln(param ParamStruct) {
+	switch param.Type {
+	case "String":
+		fmt.Println(*param.Value.(*string))
+	case "StringToString":
+		fmt.Println(*param.Value.(*map[string]string))
+	}
+}
+
+func captureStdout(f func() error) string {
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	f()
+
+	w.Close()
+	os.Stdout = old
+
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
+	return buf.String()
 }
 
 func main() {
@@ -202,7 +247,7 @@ func main() {
 	c.url = "mongodb://127.0.0.1:27017/super-mid"
 	c.db = "super-mid"
 	c.GetMongoConnectionPool()
-	data, ok := c.Find("cmd_template", "cmd", "jenkins")
+	data, ok := c.Find("cmd_template", "", "")
 
 	if !ok {
 		fmt.Println("zao!")
@@ -243,9 +288,9 @@ func main() {
 		NewCommand(rootCmd, cmd, res)
 	}
 
-	// fmt.Println("====================================")
-	// rootCmd.SetArgs([]string{"--help"})
-	// rootCmd.Execute()
+	fmt.Println("====================================")
+	rootCmd.SetArgs([]string{"--help"})
+	help_info := captureStdout(rootCmd.Execute)
 	// fmt.Println("====================================")
 	// rootCmd.SetArgs([]string{"jenkins", "--help"})
 	// rootCmd.Execute()
@@ -259,7 +304,13 @@ func main() {
 	fmt.Println(res.SubCmd["jenkins"].SubCmd["build"].Enable)
 	fmt.Println(*res.SubCmd["jenkins"].SubCmd["build"].Params["job_name"].Value.(*string))
 	fmt.Println(*res.SubCmd["jenkins"].SubCmd["build"].Params["param"].Value.(*map[string]string))
-	// PrintCommand(res)
-	cmdLine, _ := ExecCommand(res)
-	fmt.Println(cmdLine)
+	// // PrintCommand(res)
+	// cmdLine, _ := ExecCommand(res)
+	// fmt.Println(cmdLine)
+
+	fmt.Println("============")
+	ExecCommand2("jenkins.build", res)
+	fmt.Println("============")
+
+	fmt.Println(help_info)
 }

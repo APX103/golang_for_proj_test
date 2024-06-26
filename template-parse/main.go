@@ -8,17 +8,25 @@ import (
 )
 
 type Task struct {
-	ID string
+	ID     string
+	Params map[string]string
 }
 
 func main() {
 	fmt.Println("6")
-	tmpl, err := template.New("test").Parse("66 {{.ID}} 66")
+	tmpl, err := template.New("test").Parse(`66 {{.ID}} 66{{range $key,$value := .Params}}
+{{ $key }} {{ $value }}
+{{- end }}
+`)
 	if err != nil {
 		fmt.Println("憋屈")
 	}
 	task := Task{
 		ID: "你好",
+		Params: map[string]string{
+			"A": "1",
+			"b": "B",
+		},
 	}
 
 	res := new(bytes.Buffer)
