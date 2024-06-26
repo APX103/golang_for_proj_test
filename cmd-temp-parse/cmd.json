@@ -1,81 +1,96 @@
 {
     "cmd": "jenkins",
     "sub-cmd": [
-        {
-            "cmd": "build",
-            "sub-cmd": [],
-            "params": [
-                {
-                    "key": "param",
-                    "type": "StringToString",
-                    "Default": "",
-                    "required": false,
-                    "help": "Jenkins Job param like 'a=z,s=l'"
-                },
-                {
-                    "key": "job_name",
-                    "type": "String",
-                    "Default": "",
-                    "required": true,
-                    "help": "Jenkins Job name"
-                }
-            ],
-            "short": "Build a job in Jenkins.",
-            "long": "Build a job in Jenkins by job name and it's parameters."
-        },
-        {
-            "cmd": "status",
-            "sub-cmd": [],
-            "params": [
-                {
-                    "key": "job_name",
-                    "type": "String",
-                    "Default": "",
-                    "required": true,
-                    "help": ""
-                },
-                {
-                    "key": "build_id",
-                    "type": "String",
-                    "Default": "",
-                    "required": true,
-                    "help": ""
-                }
-            ],
-            "short": "Check build status in Jenkins.",
-            "long": "Check build status in Jenkins with `job_name` and `build_id`."
-        },
-        {
-            "cmd": "queue",
+      {
+        "cmd": "build",
+        "sub-cmd": [],
+        "params": [
+          {
+            "key": "param",
+            "type": "StringToString",
+            "Default": "",
+            "required": false,
+            "help": "Jenkins Job param like `a=z,s=l`"
+          },
+          {
+            "key": "job_name",
+            "type": "String",
+            "Default": "",
+            "required": true,
+            "help": "Jenkins Job name"
+          }
+        ],
+        "short": "Build a job in Jenkins.",
+        "long": "Build a job in Jenkins by job name and it's parameters."
+      },
+      {
+        "cmd": "status",
+        "sub-cmd": [],
+        "params": [
+          {
+            "key": "job_name",
+            "type": "String",
+            "Default": "",
+            "required": true,
+            "help": ""
+          },
+          {
+            "key": "build_id",
+            "type": "String",
+            "Default": "",
+            "required": true,
+            "help": ""
+          }
+        ],
+        "short": "Check build status in Jenkins.",
+        "long": "Check build status in Jenkins with `job_name` and `build_id`."
+      },
+      {
+        "cmd": "queue",
+        "sub-cmd": [],
+        "params": [],
+        "short": "Show building queue in Jenkins.",
+        "long": "Show building queue in Jenkins."
+      },
+      {
+        "cmd": "list",
+        "sub-cmd": [],
+        "params": [
+            {
+              "key": "folder",
+              "type": "String",
+              "Default": "",
+              "required": false,
+              "help": "List folder. like `folder1/folder2`, if folder is \"\", list root."
+            }
+        ],
+        "short": "Show building queue in Jenkins.",
+        "long": "Show building queue in Jenkins."
+      },
+      {
+        "cmd": "node",
+        "sub-cmd": [
+          {
+            "cmd": "list",
             "sub-cmd": [],
             "params": [],
-            "short": "Show building queue in Jenkins.",
-            "long": "Show building queue in Jenkins."
-        },
-        {
-            "cmd": "node",
-            "sub-cmd": [
-                {
-                    "cmd": "list",
-                    "sub-cmd": [],
-                    "params": [],
-                    "short": "List nodes in Jenkins.",
-                    "long": "List nodes in Jenkins."
-                },
-                {
-                    "cmd": "online",
-                    "sub-cmd": [],
-                    "params": [],
-                    "short": "Check online load in Jenkins.",
-                    "long": "Check online load in Jenkins."
-                }
-            ],
+            "short": "List nodes in Jenkins.",
+            "long": "List nodes in Jenkins."
+          },
+          {
+            "cmd": "online",
+            "sub-cmd": [],
             "params": [],
-            "short": "Show nodes in Jenkins and check if they're online.",
-            "long": "Show nodes in Jenkins and check if they're online."
-        }
+            "short": "Check online load in Jenkins.",
+            "long": "Check online load in Jenkins."
+          }
+        ],
+        "params": [],
+        "short": "Show nodes in Jenkins and check if they're online.",
+        "long": "Show nodes in Jenkins and check if they're online."
+      }
     ],
     "params": [],
     "short": "Run jenkins task by this robot.",
     "long": "Feishu robot: Jenkins agent is an agent to get access to the Jenkins service maintained by QA team. It can build jobs, check task queue, get jobs' status and so on."
-}
+  }
